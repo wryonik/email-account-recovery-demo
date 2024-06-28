@@ -1,0 +1,12 @@
+{
+    "verifier": "0xEdC642bbaD91E21cCE6cd436Fdc6F040FD0fF998",
+    "dkimRegistry": "0xC83256CCf7B94d310e49edA05077899ca036eb78",
+    "emailAuthImpl": "0x1C76Aa365c17B40c7E944DcCdE4dC6e6D2A7b748",
+    "simpleWalletImpl": "0xabAA8B42d053a57DeC990906ebdF3efF6844A861",
+    "safeZkSafeZkEmailRecoveryPlugin": "0xFcfE6030952326c90fc615DDD15a3945f62AfCef",
+    "entryPoint": "0x0000000071727De22E5E9d8BAf0edAc6f37da032",
+    "safe7579": "0x2D726B43CeFD9838bE719b5814E3b7F6C7615111",
+    "safe7579Launchpad": "0xacb01ff3d29039f8572f52ea73a44059a252cbc1",
+    "erc7484Registry": "0xe0cde9239d16bEf05e62Bbf7aA93e420f464c826",
+    "safeRecoveryModule": "0xa81Ff102BF1E6AEaF5055fbdce4D15FB75c72a20"
+}
