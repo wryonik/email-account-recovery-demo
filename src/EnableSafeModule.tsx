@@ -1,8 +1,5 @@
 import { Button } from "./components/Button";
-import {
-  safe7579,
-  safeRecoveryModule,
-} from "../contracts.base-sepolia.json";
+import { safe7579, safeRecoveryModule } from "../contracts.base-sepolia.json";
 import { abi as safeAbi } from "./abis/Safe.json";
 import { abi as safe7579Abi } from "./abis/Safe7579.json";
 import { useCallback, useState } from "react";
@@ -23,11 +20,22 @@ import {
 } from "permissionless/clients/pimlico";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { signerToSafeSmartAccount } from "permissionless/accounts";
+import { createAccount } from "./createAccount";
+import { Address, Hex, keccak256, stringToBytes } from "viem";
+import { createAndSignUserOp, submitUserOpToBundler } from "./userop";
+import { getBundlerClient } from "./clients";
+
+export const generateRandomString = function () {
+  return Math.random().toString(20).substr(2, 6);
+};
+
+export const VALIDATOR_ADDRESS: Address =
+  "0xBdf6aE24B783A7bA2A0d874eF49Cb0d2D7f619c6"; // mock validator
 
 const EnableSafeModule = () => {
   const [isEnableModalLoading, setIsEnableModuleLoading] = useState(false);
 
-  console.log(import.meta.env.VITE_PIMLICO_API_KEY)
+  console.log(import.meta.env.VITE_PIMLICO_API_KEY);
   const enableSafe7579Module = useCallback(async () => {
     setIsEnableModuleLoading(true);
 
@@ -76,6 +84,59 @@ const EnableSafeModule = () => {
         gasPrice: async () =>
           (await bundlerClient.getUserOperationGasPrice()).fast,
       },
+    });
+
+    const salt = generateRandomString();
+    const saltNonce = keccak256(stringToBytes(salt));
+
+    const activeAccount = await createAccount({
+      salt: saltNonce,
+      validators: [],
+      executors: [],
+      fallbacks: [],
+      hooks: [],
+      safeConfig: {
+        owners: ["0x503b54Ed1E62365F0c9e4caF1479623b08acbe77"],
+        threshold: 1,
+      },
+      registryConfig: {
+        attesters: [],
+        threshold: 0,
+      },
+      initialExecution: {
+        target: "0xF7C012789aac54B5E33EA5b88064ca1F1172De05" as Address,
+        value: "1",
+        callData: "0x" as Hex,
+      },
+    });
+
+    const chosenValidator = {
+      address: VALIDATOR_ADDRESS,
+      mockSignature:
+        "0xe8b94748580ca0b4993c9a1b86b5be851bfc076ff5ce3a1ff65bf16392acfcb800f9b4f1aef1555c7fce5599fffb17e7c635502154a0333ba21f3ae491839af51c",
+      signMessageAsync: async (message: Hex, activeAccount: any) => {
+        const signer = privateKeyToAccount(
+          "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+        );
+        const signature = await signer.signMessage({
+          message: { raw: message },
+        });
+        return signature;
+      },
+    };
+
+    const userOp = await createAndSignUserOp({
+      activeAccount,
+      callData: activeAccount.callData,
+      chosenValidator,
+    });
+
+    // submit the user operation to the bundler
+    const hash = (await submitUserOpToBundler(userOp)) as Hex;
+
+    // wait for the user operation to be processed
+    const receipt = await getBundlerClient().waitForUserOperationReceipt({
+      hash,
     });
 
     console.debug("send batched userops");
@@ -182,7 +243,7 @@ const EnableSafeModule = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: '100vh',
+        height: "100vh",
         gap: "2rem",
         flexDirection: "column",
       }}
