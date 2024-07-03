@@ -91,7 +91,7 @@ const EnableSafeModule = () => {
 
     const activeAccount = await createAccount({
       salt: saltNonce,
-      validators: [],
+      validators: [{ module: VALIDATOR_ADDRESS, initData: "0x" }],
       executors: [],
       fallbacks: [],
       hooks: [],
@@ -139,7 +139,7 @@ const EnableSafeModule = () => {
       hash,
     });
 
-    console.debug("send batched userops");
+    console.debug("send batched userops", receipt);
 
     const executorModuleTypeId = 2;
     const oneWeekInSeconds = 60n * 60n * 24n * 7n;

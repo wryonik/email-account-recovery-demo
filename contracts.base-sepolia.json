@@ -5,8 +5,8 @@
     "simpleWalletImpl": "0xabAA8B42d053a57DeC990906ebdF3efF6844A861",
     "safeZkSafeZkEmailRecoveryPlugin": "0xFcfE6030952326c90fc615DDD15a3945f62AfCef",
     "entryPoint": "0x0000000071727De22E5E9d8BAf0edAc6f37da032",
-    "safe7579": "0x2D726B43CeFD9838bE719b5814E3b7F6C7615111",
-    "safe7579Launchpad": "0xfb27C1d344476dAA53F7Bec0cB2c1fAfC29713ac",
+    "safe7579": "0xdab0704b8b0a243c3A41DbFf79Da707c58878922",
+    "safe7579Launchpad": "0x5149511cBf45E31Fee20BB8AEE6e33601F588C90",
     "erc7484Registry": "0xe0cde9239d16bEf05e62Bbf7aA93e420f464c826",
     "safeRecoveryModule": "0xa81Ff102BF1E6AEaF5055fbdce4D15FB75c72a20"
 }
